@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Rent Prediction</title>
+   
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #007bff;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .spinner-container {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.4em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">House Rent Prediction</h1>
+        <form id="prediction-form" method="post" action="/">
+            <div class="form-group">
+                <label for="BHK" class="form-label">BHK:</label>
+                <input type="number" id="BHK" name="BHK" class="form-control" value="{{ request.form.get('BHK', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Size" class="form-label">Size (sq ft):</label>
+                <input type="number" id="Size" name="Size" class="form-control" value="{{ request.form.get('Size', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Area Locality" class="form-label">Area Locality:</label>
+                <input type="text" id="Area Locality" name="Area Locality" class="form-control" value="{{ request.form.get('Area Locality', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="City" class="form-label">City:</label>
+                <input type="text" id="City" name="City" class="form-control" value="{{ request.form.get('City', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Furnishing Status" class="form-label">Furnishing Status:</label>
+                <input type="text" id="Furnishing Status" name="Furnishing Status" class="form-control" value="{{ request.form.get('Furnishing Status', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Tenant Preferred" class="form-label">Tenant Preferred:</label>
+                <input type="text" id="Tenant Preferred" name="Tenant Preferred" class="form-control" value="{{ request.form.get('Tenant Preferred', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Bathroom" class="form-label">Bathroom:</label>
+                <input type="number" id="Bathroom" name="Bathroom" class="form-control" value="{{ request.form.get('Bathroom', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Point of Contact" class="form-label">Point of Contact:</label>
+                <input type="text" id="Point of Contact" name="Point of Contact" class="form-control" value="{{ request.form.get('Point of Contact', '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="Floor" class="form-label">Floor (e.g., "1 out of 3"):</label>
+                <input type="text" id="Floor" name="Floor" class="form-control" value="{{ request.form.get('Floor', '') }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" onclick="showSpinner()">Predict</button>
+        </form>
+
+        <div class="spinner-container" id="spinner-container">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+       
+        <div class="modal fade" id="predictionModal" tabindex="-1" role="dialog" aria-labelledby="predictionModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="predictionModalLabel">Prediction Result</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 id="prediction-text">Loading prediction...</h2>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function showSpinner() {
+            document.getElementById('spinner-container').style.display = 'block';
+        }
+
+        function showPrediction(prediction) {
+            const predictionText = prediction || 'Fill All Data For Predict House Rent';
+            document.getElementById('prediction-text').textContent = predictionText;
+            document.getElementById('spinner-container').style.display = 'none';
+            $('#predictionModal').modal('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if prediction is not none %}
+                showPrediction('{{ prediction }}');
+            {% endif %}
+        });
+    </script>
+</body>
+</html>
